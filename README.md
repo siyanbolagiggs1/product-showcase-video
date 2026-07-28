@@ -9,7 +9,8 @@ assets, or have no visuals yet.
 ## Get started
 
 ```bash
-git clone <this-repo-url> && cd product-showcase-video
+git clone https://github.com/siyanbolagiggs1/product-showcase-video.git
+cd product-showcase-video
 npm install
 npx playwright install chromium
 ```
@@ -20,12 +21,11 @@ see [install commands](skills/product-showcase-video/references/capture-and-asse
 Install the skill into your agent:
 
 ```bash
-gh skill install <owner>/<repo> --agent claude --scope user
+gh skill install siyanbolagiggs1/product-showcase-video --agent claude --scope user
 ```
 
-(No GitHub remote yet, or a different setup? See
-[Installing the skill](#installing-the-skill) below for a no-GitHub
-alternative.)
+Using a different agent, or no GitHub CLI? See
+[Installing the skill](#installing-the-skill) below for alternatives.
 
 Start a **new** agent session (one already running won't see a skill
 installed after it started), then just ask:
@@ -53,9 +53,11 @@ it to, or no audio at all (silent, with burned-in captions).
 
 ## Installing the skill
 
-`gh skill install` (GitHub CLI 2.96+, works for Claude Code/Cursor/Codex)
-needs this repo pushed to GitHub. Without that, symlink/junction the skill
-folder into your agent's local skills directory instead — for Claude Code:
+The `gh skill install` command above (GitHub CLI 2.96+) works for Claude
+Code, Cursor, and Codex, and is the recommended path. If you'd rather not
+depend on GitHub CLI, or you're working from a local clone that isn't
+pushed anywhere, symlink/junction the skill folder into your agent's local
+skills directory instead — for Claude Code:
 
 ```bash
 # macOS / Linux — global (every project)
