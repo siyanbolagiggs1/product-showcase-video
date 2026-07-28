@@ -1,0 +1,34 @@
+{
+  "skills": {
+    "product-showcase-video": [
+      {
+        "prompt": "Make a 20-second demo video for my app's landing page from these screenshots.",
+        "expect": "trigger"
+      },
+      {
+        "prompt": "I don't have screenshots yet -- can you grab them from my running dev server at localhost:3000 and turn it into a product video?",
+        "expect": "trigger"
+      },
+      {
+        "prompt": "Build a promo video for the App Store using our existing listing screenshots.",
+        "expect": "trigger"
+      },
+      {
+        "prompt": "Fix the failing unit test in the checkout flow.",
+        "expect": "do-not-trigger"
+      },
+      {
+        "prompt": "Write release notes for this changelog.",
+        "expect": "do-not-trigger"
+      },
+      {
+        "prompt": "Can you make our product look better?",
+        "expect": "ambiguous"
+      },
+      {
+        "prompt": "We want something to share on social media about the new feature.",
+        "expect": "ambiguous"
+      }
+    ]
+  }
+}

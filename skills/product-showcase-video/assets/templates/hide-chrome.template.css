@@ -1,0 +1,30 @@
+/*
+ * Pass this file (adapted) to capture-frames.js via --inject-css when the
+ * source HTML has extra authoring-time chrome around the actual animated
+ * stage -- e.g. a side-by-side scene-breakdown panel used while designing
+ * the storyboard with the user, that shouldn't appear in the final video.
+ *
+ * Adjust the selectors below to match your storyboard's actual markup.
+ * Skip this file entirely if the storyboard HTML is already authored
+ * full-bleed at the target capture size.
+ */
+
+/* Hide everything that isn't the animated stage itself. */
+body > *:not(.stage) {
+  display: none !important;
+}
+
+/* Blow the stage up to fill the full viewport exactly. */
+.stage {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+html, body {
+  overflow: hidden !important;
+  background: #000;
+}

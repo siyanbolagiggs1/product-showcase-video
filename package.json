@@ -1,0 +1,16 @@
+{
+  "name": "product-showcase-video",
+  "version": "1.0.0",
+  "description": "Agent Skill + tooling that turns product screenshots and a pitch into an MP4 showcase video.",
+  "scripts": {
+    "capture": "node skills/product-showcase-video/scripts/capture-frames.js",
+    "validate": "python3 scripts/validate_catalog.py"
+  },
+  "keywords": ["agent-skill", "video", "playwright", "ffmpeg"],
+  "author": "siyanbolagiggs1",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "playwright": "^1.62.0"
+  }
+}

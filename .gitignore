@@ -1,0 +1,16 @@
+node_modules/
+frames-out/
+*.mp4
+*.mp3
+*.wav
+
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+.claude/
+.env
+.env.*
+__pycache__/
+*.py[cod]

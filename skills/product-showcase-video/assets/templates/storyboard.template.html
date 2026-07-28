@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Product Showcase Storyboard</title>
+<style>
+  :root {
+    --duration: 15s; /* must match --duration (ms) passed to capture-frames.js */
+    --accent: #4f46e5;
+    --stage-w: 1080px;
+    --stage-h: 1920px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #000; /* letterbox color when previewing in a browser window
+                          that isn't exactly --stage-w x --stage-h -- see the
+                          fit-to-window script at the end of <body> */
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stage {
+    position: relative;
+    width: var(--stage-w);
+    height: var(--stage-h);
+    background: #0b0b12;
+    transform-origin: center center;
+    flex: none;
+  }
+  .scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8%; /* safe margin */
+    text-align: center;
+    color: #fff;
+    opacity: 0;
+    animation: var(--duration) linear infinite;
+  }
+
+  /*
+   * Each scene gets its OWN @keyframes spanning the full 0%-100% timeline,
+   * opaque only during its own slice, with a ~1% crossfade into the next
+   * scene's slice. This is deliberate: an earlier version of this template
+   * used one shared keyframe rule plus animation-delay per scene, which
+   * left a multi-second dead gap where nothing was visible (the delay
+   * shifted *when* the narrow 2%-16% visible window landed, but never
+   * covered the rest of the timeline). Giving every scene full coverage
+   * of its own slice, with adjacent slices meeting exactly at the
+   * boundary, guarantees there's always exactly one scene visible.
+   *
+   * Slices below assume --duration: 15s -- 3s hook (0%-20%), 9s feature
+   * (20%-80%), 3s CTA (80%-100%). If you change --duration or add more
+   * feature scenes, recompute each scene's percentages so every slice's
+   * boundaries still add up to a continuous 0%-100% with no gaps.
+   */
+  .scene--hook {
+    animation-name: hook-cycle;
+  }
+  @keyframes hook-cycle {
+    0%   { opacity: 1; }
+    19%  { opacity: 1; }
+    20%  { opacity: 0; } /* crossfades into feature-cycle's fade-in below */
+    100% { opacity: 0; }
+  }
+
+  .scene--feature-1 {
+    animation-name: feature-cycle;
+  }
+  @keyframes feature-cycle {
+    0%   { opacity: 0; }
+    19%  { opacity: 0; }
+    20%  { opacity: 1; } /* crossfades in as hook-cycle fades out */
+    79%  { opacity: 1; }
+    80%  { opacity: 0; } /* crossfades into cta-cycle's fade-in below */
+    100% { opacity: 0; }
+  }
+
+  .scene--cta {
+    animation-name: cta-cycle;
+  }
+  @keyframes cta-cycle {
+    0%   { opacity: 0; }
+    79%  { opacity: 0; }
+    80%  { opacity: 1; } /* crossfades in as feature-cycle fades out */
+    100% { opacity: 1; } /* hard cut back to hook-cycle at the loop seam --
+                             fine since the CTA and hook share a visual
+                             style, so the loop still reads as bookended */
+  }
+
+  .product-name { font-size: 64px; font-weight: 700; margin: 0 0 16px; }
+  .tagline { font-size: 32px; opacity: 0.85; margin: 0; }
+  .caption { font-size: 40px; font-weight: 600; margin-top: 32px; }
+  .screenshot-frame {
+    max-width: 100%;
+    max-height: 60%;
+    border-radius: 24px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    /* replace with a real screenshot: */
+    /* background-image: url(data:image/png;base64,...); */
+    background: #1c1c28;
+    background-size: cover;
+    width: 800px;
+    height: 900px;
+  }
+  .cta-button {
+    margin-top: 40px;
+    padding: 20px 48px;
+    border-radius: 999px;
+    background: var(--accent);
+    font-size: 36px;
+    font-weight: 700;
+  }
+
+  /*
+   * Preview-only aspect ratio switcher. Lets you compare presets live in a
+   * browser tab. It is NOT part of the exported video and must be hidden
+   * at capture time -- pass
+   * --inject-css assets/templates/hide-chrome.template.css
+   * to capture-frames.js, whose `body > *:not(.stage)` rule already hides
+   * any sibling of .stage, this toolbar included. Whichever preset you
+   * were last looking at has NO effect on the actual export -- the
+   * exported dimensions come only from --width/--height on the
+   * capture-frames.js command line, so make sure those match the preset
+   * you intend before you capture.
+   */
+  .preview-toolbar {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(20, 20, 28, 0.85);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .preview-toolbar button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .preview-toolbar button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+</style>
+</head>
+<body>
+  <div class="preview-toolbar" role="group" aria-label="Preview aspect ratio">
+    <button type="button" data-preset="vertical" aria-pressed="true">Vertical 9:16</button>
+    <button type="button" data-preset="square" aria-pressed="false">Square 1:1</button>
+    <button type="button" data-preset="landscape" aria-pressed="false">Landscape 16:9</button>
+  </div>
+
+  <div class="stage">
+    <div class="scene scene--hook">
+      <p class="product-name">Your Product Name</p>
+      <p class="tagline">One clear line about what it does for the user</p>
+    </div>
+
+    <div class="scene scene--feature-1">
+      <div class="screenshot-frame"></div>
+      <p class="caption">Name the feature and its benefit here</p>
+    </div>
+
+    <!-- To add more feature beats: duplicate a .scene block, give it its
+         own @keyframes name and slice of the 0%-100% timeline (see the
+         comment above), and shrink feature-cycle's 20%-80% slice to make
+         room for the added slice(s), keeping every boundary continuous. -->
+
+    <div class="scene scene--cta">
+      <p class="product-name">Your Product Name</p>
+      <div class="cta-button">Try it free</div>
+    </div>
+  </div>
+
+  <script>
+    // Aspect ratio presets -- keep this list in sync with the table in
+    // references/storyboard-authoring.md. `w`/`h` are the exact values to
+    // pass as --width/--height to capture-frames.js for that preset.
+    var PRESETS = {
+      vertical:  { w: 1080, h: 1920, label: 'Reels / TikTok / Shorts / Stories' },
+      square:    { w: 1080, h: 1080, label: 'Instagram feed / LinkedIn' },
+      landscape: { w: 1920, h: 1080, label: 'YouTube / landing-page hero' }
+    };
+    var root = document.documentElement;
+    var current = { w: 1080, h: 1920 };
+
+    function fitStage() {
+      // Scales .stage to fit whatever window it's opened in, for casual
+      // browser preview. This is a deliberate no-op at actual capture
+      // time: capture-frames.js sets the Playwright viewport to exactly
+      // --stage-w x --stage-h, so window.innerWidth/innerHeight equal the
+      // stage's own size, the computed scale is exactly 1, and the
+      // transform has zero effect on captured frames.
+      var scale = Math.min(window.innerWidth / current.w, window.innerHeight / current.h);
+      document.querySelector('.stage').style.transform = 'scale(' + scale + ')';
+    }
+
+    function setPreset(name) {
+      var preset = PRESETS[name];
+      if (!preset) return;
+      current = preset;
+      root.style.setProperty('--stage-w', preset.w + 'px');
+      root.style.setProperty('--stage-h', preset.h + 'px');
+      document.querySelectorAll('.preview-toolbar button').forEach(function (btn) {
+        btn.setAttribute('aria-pressed', String(btn.dataset.preset === name));
+      });
+      fitStage();
+    }
+
+    document.querySelectorAll('.preview-toolbar button').forEach(function (btn) {
+      btn.addEventListener('click', function () { setPreset(btn.dataset.preset); });
+    });
+
+    fitStage();
+    window.addEventListener('resize', fitStage);
+  </script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Showcase Video"
+  short_description: "Turn screenshots and a pitch into a real MP4 showcase video"
+  default_prompt: "Use $product-showcase-video to build a showcase video for this product."
