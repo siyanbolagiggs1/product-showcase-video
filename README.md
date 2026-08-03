@@ -21,7 +21,7 @@ see [install commands](skills/product-showcase-video/references/capture-and-asse
 Install the skill into your agent:
 
 ```bash
-gh skill install siyanbolagiggs1/product-showcase-video --agent claude --scope user
+gh skill install siyanbolagiggs1/product-showcase-video product-showcase-video --agent claude-code --scope user
 ```
 
 Using a different agent, or no GitHub CLI? See
